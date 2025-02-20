@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alyssa Sunjin Im Website</title>
+    <!-- Google Fonts 추가 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif; /* 둥글둥글한 글씨체 적용 */
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            margin-bottom: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .hero {
+            position: relative; /* 📌 Hero 영역을 상대적 위치로 설정 */
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            text-align: center; /* 📌 텍스트 및 게임 정렬 */
+        }
+
+        .hero img {
+            width: 100%;
+            height: 500px; /* 📌 Hero 이미지 크기 유지 */
+            object-fit: cover;
+        }
+
+        .hero h2 {
+            position: absolute;
+            top: 10px;
+            left: 40px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 🔹 게임 컨테이너를 Hero 이미지 위에 오버레이 */
+        #gameContainer {
+            position: absolute; /* 📌 Hero 이미지 위에 겹치도록 설정 */
+            top: 50%; /* 📌 이미지 중앙에 정렬 */
+            left: 50%;
+            transform: translate(-50%, -50%); /* 📌 중앙 정렬 */
+            width: 800px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.8); /* 📌 반투명 배경 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .list-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+        #contact form {
+            display: flex;
+            flex-direction: column; /* 요소를 세로로 정렬 */
+            gap: 10px; /* 각 필드 사이 간격 */
+        }
+
+        #contact form label {
+            margin-bottom: 5px; /* 라벨과 입력 필드 사이 간격 */
+            font-weight: bold; /* 라벨을 강조 */
+        }
+
+        #contact form input,
+        #contact form textarea,
+        #contact form button {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #contact form button {
+            font-family: 'Poppins', sans-serif; /* 버튼 폰트 적용 */
+            background-color: #d098f5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        #contact form button:hover {
+            background-color: #c379f5;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            transition: height 0.3s ease, display 0.3s ease;
+        }
+        .chatbot-header {
+            height: 20px;
+            background-color: #ccc;
+            cursor: pointer;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            user-select: none;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            right: 5px;
+            top: 0;
+            font-size: 14px;
+            color: red;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        .chatbot-toggle-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1100;
+            background-color: #c379f5;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<script>
+    function loadGame() {
+        fetch('game.html')  // game.html 가져오기
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('gameContainer').innerHTML = data;  // Hero 이미지 위에 게임 삽입
+                preventPageScroll();  // 🔥 스크롤 방지
+            })
+            .catch(error => console.error('Error loading game:', error));
+    }
+
+    function preventPageScroll() {
+        window.addEventListener("keydown", function(e) {
+            if (["ArrowUp", "ArrowDown"].includes(e.key)) {
+                e.preventDefault();  // 🔥 웹페이지 스크롤 방지
+            }
+        });
+    }
+
+    window.onload = loadGame; // 페이지 로드 시 게임 자동 삽입
+</script>
+
+<body>
+    <header>
+        <h1>Welcome to Sunjin's Web</h1>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <img src="test_image.webp" alt="Hero Image">
+            <h2>If you pass, you can see my smile!</h2>
+            <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+    </div>y
+        </section>
+        
+
+        <!-- About Me Section -->
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Hi! I'm Alyssa Sunjin Im. I'm passionate about web development and creating user-centered designs that are both functional and visually appealing.</p>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience">
+            <h2>Work Experiences</h2>
+            <div class="list-item">
+                <img src="https://via.placeholder.com/50" alt="Company Logo">
+                <div>
+                    <h3>Software Engineer Intern</h3>
+                    <p>Company: XYZ Corp</p>
+                    <p>Duration: June 2023 - August 2023</p>
+                </div>
+            </div>
+            <div class="list-item">
+                <img src="https://via.placeholder.com/50" alt="Company Logo">
+                <div>
+                    <h3>Web Developer</h3>
+                    <p>Company: ABC Ltd</p>
+                    <p>Duration: January 2022 - May 2023</p>
+                </div>
+            </div>
+            <div class="list-item">
+                <img src="https://via.placeholder.com/50" alt="Company Logo">
+                <div>
+                    <h3>Freelance Designer</h3>
+                    <p>Specializing in UX/UI design and front-end development.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2>Contact Me</h2>
+            <p>Feel free to get in touch! I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
+            <form>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024-2025 Alyssa Sunjin Im. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Chatbot Toggle Icon -->
+    <button class="chatbot-toggle-icon" id="chatbot-toggle">💬</button>
+
+    <!-- Embed Chatbot -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header" id="chatbot-header">
+            Click to change size
+            <button class="close-btn" id="chatbot-close">✖</button>
+        </div>
+        <iframe src="https://copilotstudio.microsoft.com/environments/Default-482198bb-ae7b-4b25-8b7a-6d7f32faa083/bots/crad4_websiteQACopilot/webchat?__version__=2">
+        </iframe>
+    </div>
+
+    <script>
+        const chatbot = document.getElementById('chatbot');
+        const chatbotHeader = document.getElementById('chatbot-header');
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotClose = document.getElementById('chatbot-close');
+        let isChatbotVisible = false; // 챗봇 보임 여부 상태
+        let isExpanded = false; // 크기 상태 변수
+
+        // 챗봇 토글 버튼 클릭 이벤트
+        chatbotToggle.addEventListener('click', () => {
+            isChatbotVisible = true;
+            chatbot.style.display = 'flex';
+            chatbot.style.height = '300px'; // 기본 높이 설정
+            chatbotToggle.style.display = 'none'; // 토글 버튼 숨김
+            isExpanded = false; // 기본 크기로 설정
+        });
+
+        // 닫기 버튼 클릭 이벤트
+        chatbotClose.addEventListener('click', () => {
+            isChatbotVisible = false;
+            chatbot.style.display = 'none';
+            chatbotToggle.style.display = 'block'; // 토글 버튼 다시 표시
+        });
+
+        // 챗봇 크기 조절 클릭 이벤트
+        chatbotHeader.addEventListener('click', () => {
+            if (isExpanded) {
+                chatbot.style.height = '300px'; // 최소 높이
+                isExpanded = false;
+            } else {
+                chatbot.style.height = '600px'; // 최대 높이
+                isExpanded = true;
+            }
+        });
+    </script>
+</body>
+</html>
